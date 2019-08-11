@@ -1,0 +1,88 @@
+
+% Common source - Small signal model
+\tikzset{
+	cs_ss/.style={
+		{decorate,decoration={expanding waves,angle=90,segment length=4pt}}},
+	cs_ss/.pic={
+		\draw (11,-0.5) node[]{\large{\textbf{$M_{#1}$}}};
+		\draw
+		(1,2) node[]{} |- (2,2) node[]{} to [C, C=$C_{gs_{#1}}$](2,0)
+		(4.5,0) to [american controlled current source, l_=$g_{m_{#1}} V_{GS_{#1}}$] (4.5,2) to (8,2)node[]{} to [/tikz/circuitikz/bipoles/length=25pt, R, l=$r_{o_{#1}}$](8,0)
+		(8,2)node[]{} to (10,2) node[]{} to [C, C=$C_{ds_{#1}}$](10,0)
+		(2,0)node[]{} |- (4.5,0)node[circ]{} |- (8,0)node[circ]{} |- (10,0)node[]{}
+		(8,2)node[circ]{} |- (10,2)node[circ]{} |- (12,2)node[]{}
+		(2,2) node[]{} to [C, C=$C_{gd_{#1}}$](4.5,2)
+		(2,2)node[circ]{}
+		(4.5,2)node[circ]{};
+		\draw[dashed](1,-1) -- (12,-1) -- (12,3) -- (1,3) -- (1,-1);
+	}
+}
+
+% Common gate - Small signal model
+\tikzset{
+	cg_ss/.style={
+		{decorate,decoration={expanding waves,angle=90,segment length=4pt}}},
+	cg_ss/.pic={
+		\draw (7,-0.5) node[]{\large{\textbf{$M_{#1}$}}};
+		\draw
+		(1,2) node[]{} |- (2,2) node[]{} to [C, C=$C_{gs_{#1}}$](2,0)
+
+		(2.5,2) to [american controlled current source, l=$g_{m_{#1}} V_{GS_{#1}}$] (5,2) to (5,3.5)node[]{} to [/tikz/circuitikz/bipoles/length=25pt, R, l_=$r_{o_{#1}}$](2.5,3.5)
+		(5,3.5)node[circ]{} |- (5,4.5) node[]{} to [C, l_=$C_{ds_{#1}}$](2.5,4.5) |- (2.5,3.5)node[circ]{} |- (2.5,2)node[circ]{}
+		(2,2)node[circ]{} |- (2.5,2)node[]{}
+		(5,2)node[circ]{} |- (6,2) node[]{} to [C, C=$C_{gs_{#1}}$](6,0) |- (2,0)node[]{}
+		(6,2)node[circ]{} |- (8,2)node[]{};
+		\draw[dashed](1,-1) -- (8,-1) -- (8,5.5) -- (1,5.5) -- (1,-1);
+	}
+}
+
+% Diode connected - Small signal model
+\tikzset{
+	dc_ss/.style={
+		{decorate,decoration={expanding waves,angle=90,segment length=4pt}}},
+	dc_ss/.pic={
+		\draw (11,-0.5) node[]{\large{\textbf{$M_{#1}$}}};
+		\draw
+		(1,2) node[]{} |- (2,2) node[]{} to [C, C=$C_{gs_{#1}}$](2,0)
+		(4.5,0) to [american controlled current source, l_=$g_{m_{#1}} V_{GS_{#1}}$] (4.5,2) to (8,2)node[]{} to [/tikz/circuitikz/bipoles/length=25pt, R, l=$r_{o_{#1}}$](8,0)
+		(8,2)node[]{} to (10,2) node[]{} to [C, C=$C_{ds_{#1}}$](10,0)
+		(2,0)node[]{} |- (4.5,0)node[circ]{} |- (8,0)node[circ]{} |- (10,0)node[]{}
+		(8,2)node[circ]{} |- (10,2)node[]{}
+		(2,2)node[]{} |- (4.5,2)node[]{}
+		(2,2)node[circ]{}
+		(4.5,2)node[circ]{};
+		\draw[dashed](1,-1) -- (12,-1) -- (12,3) -- (1,3) -- (1,-1);
+	}
+}
+
+% Current source
+\tikzset{
+	is_ss/.style={
+		{decorate,decoration={expanding waves,angle=90,segment length=4pt}}},
+	is_ss/.pic={
+		\draw (6,-0.5) node[]{\large{\textbf{$M_{#1}$}}};
+		\draw
+		(1,2)node[]{} |- (2,2) node[circ]{} to [C, C=$C_{ds_{#1}}$](2,0)
+		(2,2)node[]{} |- (5,2) node[]{} to [C, C=$C_{gd_{#1}}$](5,0) |- (2,0)node[]{};
+		\draw[dashed](1,-1) -- (7,-1) -- (7,3) -- (1,3) -- (1,-1);
+	}
+}
+
+
+%answer from Qrrbrbirlbel for https://tex.stackexchange.com/questions/134067/circuitikz-wire-kink-thingy-when-wires-cross
+\tikzset{
+  declare function={% in case of CVS which switches the arguments of atan2
+    atan3(\a,\b)=ifthenelse(atan2(0,1)==90, atan2(\a,\b), atan2(\b,\a));},
+  kinky cross radius/.initial=+.125cm,
+  @kinky cross/.initial=+, kinky crosses/.is choice,
+  kinky crosses/left/.style={@kinky cross=-},kinky crosses/right/.style={@kinky cross=+},
+  kinky cross/.style args={(#1)--(#2)}{
+    to path={
+      let \p{@kc@}=($(\tikztotarget)-(\tikztostart)$),
+          \n{@kc@}={atan3(\p{@kc@})+180} in
+      -- ($(intersection of \tikztostart--{\tikztotarget} and #1--#2)!%
+             \pgfkeysvalueof{/tikz/kinky cross radius}!(\tikztostart)$)
+      arc [ radius     =\pgfkeysvalueof{/tikz/kinky cross radius},
+            start angle=\n{@kc@},
+            delta angle=\pgfkeysvalueof{/tikz/@kinky cross}180 ]
+      -- (\tikztotarget)}}}
